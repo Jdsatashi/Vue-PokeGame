@@ -3,9 +3,10 @@ import CardGame from "@/components/CardGame.vue";
 
 export default {
     props: {
+        // card context props from App.vue
         cardContext: {
             type: Array,
-            default: function () { return [] }
+            default: Function
         }
     },
     components: {
@@ -13,58 +14,164 @@ export default {
     },
     data() {
         return {
-            rules: []
+            // rules array to save current 2 selected cards for conditions
+            rules: [],
+            time: 0,
+            timeCounting: null,
+            isProcessing : false
         };
     },
     methods: {
-        checkRule(card){
-            console.log(card)
-            if(this.rules.length === 2) return false
-            this.rules.push(card)
+        // Check the rule of the game
+        checkRule(card) {
+            // Check to disable other cards when some cards were selected
+            if (this.isProcessing || this.rules.length === 2) return false;
+            this.rules.push(card);
 
-            if(this.rules.length === 2 && this.rules[0].value === this.rules[1].value){
-                console.log("true...")
+            // condition if 2 cards were selected is right
+            if (this.rules.length === 2 && this.rules[0].value === this.rules[1].value) {
+                console.log("true...");
+                // disable 2 right cards
                 this.$refs[`card-${this.rules[0].index}`][0].onDisable();
                 this.$refs[`card-${this.rules[1].index}`][0].onDisable();
-                this.rules = []
+                // reset rules array
+                this.rules = [];
 
+                /* disableElements selects all elements with the class "disable" that
+                 are inside elements with the classes "scene" and "card" */
                 const disableElements = document.querySelectorAll(
                     ".scene .card.disable"
-                )
-                if (disableElements && disableElements.length + 2 === this.cardContext.length){
+                );
+                // check disableElements exist and has length + 2 equal to cardContext length
+                // notes: disableElements.length need + 2 because first and second right cards were not added to disableElements
+                if (disableElements && disableElements.length + 2 === this.cardContext.length) {
                     setTimeout(() => {
-                        this.$emit("onFinish")
-                    }, 1000)
+                        this.$emit("onFinish");
+                    }, 1000);
                 }
-            } else if(this.rules.length === 2 && this.rules[0].value !== this.rules[1].value){
-                console.log("Wrong...")
+            }
+            // condition if 2 cards were selected is wrong
+            else if (this.rules.length === 2 && this.rules[0].value !== this.rules[1].value) {
+                console.log("Wrong...");
+                // set isProcessing to prevent player spamming flip cards
+                this.isProcessing  = true;
                 setTimeout(() => {
+                    // flip back card selected first is wrong
                     this.$refs[`card-${this.rules[0].index}`][0].flipBackCard();
+                    // flip back card selected second is wrong
                     this.$refs[`card-${this.rules[1].index}`][0].flipBackCard();
+                    // reset rules array
+                    this.rules = [];
+                    // set back to default value allow player selecting cards
+                    this.isProcessing  = false;
+                }, 900 /* time to acting flip back card (millisecond) */);
 
-                    this.rules = []
-                }, 900)
-
-            } else return false
+            } else return false;
+        },
+        // function send event returnBack to App.vue
+        returnMenu() {
+            this.$emit("returnBack");
+        },
+        // format time to "01:25" | 01 minute and 25 seconds
+        formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = time % 60;
+            return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        },
+        // start counting time
+        startTimer() {
+            this.timeCounting = setInterval(() => {
+                this.time++;
+            }, 1000);
+        },
+        // clear timer when unmounted
+        stopTimer() {
+            clearInterval(this.timeCounting);
         }
+    },
+    mounted() {
+        this.startTimer();
+    },
+    beforeUnmount() {
+        this.stopTimer();
     }
 };
 </script>
 
 <template>
     <div class="scene">
-        <h1>Interact Component here</h1>
-        <CardGame v-for="(card, index) in cardContext"
-                  :key="index"
-                  :ref="`card-${index}`"
-                  :img-back-face-url="`images/${card}.png`"
-                  v-bind:card="{ index, value: card }"
-                  :rules="rules"
-                  @flip="checkRule($event)"
-        />
+        <div class="flex">
+            <div>
+                <h1>Flip 2 same card to play</h1>
+            </div>
+            <div>
+                <div class="flex">
+                    <p style="font-size: 1.5em">Time: {{ formatTime(time) }}</p>
+
+                    <button class="btn" style="margin-left: 1.25em" @click="returnMenu">Back</button>
+                </div>
+            </div>
+        </div>
+        <div class="scene-inner" :style="{
+            width: `${(((((920 - 16 * 4) / Math.sqrt(cardContext.length) - 16) * 3) / 4) + 16) * Math.sqrt(cardContext.length)}px`
+        }">
+            <CardGame v-for="(card, index) in cardContext"
+                      :key="index"
+                      :ref="`card-${index}`"
+                      :img-back-face-url="`images/${card}.png`"
+                      v-bind:card="{ index, value: card }"
+                      :rules="rules"
+                      :card-context="cardContext"
+                      @flip="checkRule($event)"
+                      :class="{ 'disabled-card': isProcessing }"
+            />
+        </div>
     </div>
 </template>
 
 <style scoped>
+.disabled-card {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.scene {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: var(--dark);
+    color: var(--light)
+}
 
+.scene-inner {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.5em auto;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn {
+    padding: 8px 20px;
+    background-color: #ffffff;
+    border: 1px solid rgba(155, 153, 153, 0.9);
+    color: #151515;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background-color: #ebf7ff;
+    color: #151515;
+    border: 1px solid rgba(155, 153, 153, 0.9);
+}
 </style>

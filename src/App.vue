@@ -5,7 +5,7 @@
     import { ref } from "vue";
     import { shuffled } from "@/utils/array";
 
-    const statusMatch = ref("default");
+    const statusMatch = ref("menu");
     const settings = ref({
         totalBlock: 0,
         cardContext: [],
@@ -13,10 +13,9 @@
     });
     const timer = ref(0)
     const handleStart = (config) => {
-        let totalBlock =  settings.value.totalBlock
-        totalBlock = config.totalBlocks
+        settings.value.totalBlock = config.totalBlocks
         const firstCard = Array.from(
-            {length: totalBlock / 2},
+            {length: settings.value.totalBlock / 2},
             (_, i) => i + 1,
         )
         const secondCard = [...firstCard]
@@ -37,16 +36,17 @@
 
 <template>
     <MainScene
-        v-if="statusMatch === 'default'" @onStart="handleStart($event)"
+        v-if="statusMatch === 'menu'" @onStart="handleStart($event)"
     />
     <InteractScene
         v-if="statusMatch === 'inGame'" :cardContext="settings.cardContext"
         @onFinish="onGetResult"
+        @returnBack="statusMatch = 'menu'"
     />
     <ResultScene
         v-if="statusMatch === 'result'"
         :timer="timer"
-        @playAgain="statusMatch = 'default'"
+        @playAgain="statusMatch = 'menu'"
     />
 </template>
 
