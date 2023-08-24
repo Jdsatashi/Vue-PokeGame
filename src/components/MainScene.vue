@@ -1,6 +1,7 @@
 <script setup>
 const emits = defineEmits(["onStart"]);
 
+// send number of blocks to App.vue
 const onClickStart = (totalBlocks) => {
     emits("onStart", { totalBlocks });
 };
@@ -21,7 +22,6 @@ const onClickStart = (totalBlocks) => {
                         <span class="button-text">6x6</span>
                         <span class="button-description">Normal</span>
                     </button>
-
                 </div>
                 <div class="button-row">
                     <button class="btn" v-on:click="onClickStart(64)">
@@ -33,8 +33,6 @@ const onClickStart = (totalBlocks) => {
                         <span class="button-description">Super hard</span>
                     </button>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -61,11 +59,12 @@ const onClickStart = (totalBlocks) => {
 
 .title {
     font-size: 2.5em;
-    background: linear-gradient(45deg, #47b0f1, #9ef598 50%, #47b0f1);
+    font-weight: 700;
+    background: linear-gradient(45deg, #00A5FF, rgba(152, 223, 245, 0.98) 50%, #00A5FF);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0.1em 0.1em 0.2em rgba(98, 97, 97, 0.9);
+    text-shadow: 0.25em 0.25em 0.5em rgba(159, 157, 157, 0.9);
     transform: perspective(50px) rotateX(10deg);
 }
 
@@ -106,7 +105,7 @@ const onClickStart = (totalBlocks) => {
 .btn {
     margin: 10px;
     padding: 10px 20px;
-    background-color: #00A5FF; /* Màu nền xanh biển */
+    background: #00A5FF linear-gradient(45deg, #00A5FF, rgba(152, 223, 245, 0.98) 50%, #00A5FF);
     border: none;
     color: white;
     cursor: pointer;
@@ -117,7 +116,8 @@ const onClickStart = (totalBlocks) => {
 }
 
 .btn:hover {
-
+    background: #0f84c0 linear-gradient(45deg, #0f84c0, rgba(149, 221, 243, 0.98) 50%, #0f84c0);
+    color: white;
 }
 </style>
 

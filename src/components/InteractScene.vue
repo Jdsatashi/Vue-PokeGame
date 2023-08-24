@@ -26,10 +26,10 @@ export default {
         checkRule(card) {
             // Check to disable other cards when some cards were selected
             if (this.isProcessing || this.rules.length === 2) return false;
-            this.rules.push(card);
 
+            this.rules.push(card);
             // condition if 2 cards were selected is right
-            if (this.rules.length === 2 && this.rules[0].value === this.rules[1].value) {
+            if (this.rules.length === 2 && this.rules[0].index !== this.rules[1].index && this.rules[0].value === this.rules[1].value) {
                 console.log("true...");
                 // disable 2 right cards
                 this.$refs[`card-${this.rules[0].index}`][0].onDisable();
@@ -63,9 +63,11 @@ export default {
                     // reset rules array
                     this.rules = [];
                     // set back to default value allow player selecting cards
-                    this.isProcessing  = false;
-                }, 900 /* time to acting flip back card (millisecond) */);
 
+                }, 900 /* time to acting flip back card (millisecond) */);
+                setTimeout(() => {
+                    this.isProcessing  = false;
+                }, 1000)
             } else return false;
         },
         // function send event returnBack to App.vue
