@@ -41,7 +41,7 @@ export default {
          :style="{
             height: `${(920 - 16 * 4) / Math.sqrt(cardContext.length) - 20}px`,
             width: `${(((920 - 16 * 4) / Math.sqrt(cardContext.length) - 16) * 3) / 4}px`,
-            perspective: `${(((920 - 16 * 4) / (cardContext.length) - 16) * 3) / 0.5}px`,
+            perspective: `${(((920 - 16 * 4) / (cardContext.length) - 16) * 3) / (0.5 * (0.5 / cardContext.length))}px`,
             borderRadius: `${16 * (16 / cardContext.length)}px`
     }">
         <div class="card-inner"
@@ -110,6 +110,8 @@ export default {
 .card_face-back {
     background-color: var(--light);
     transform: rotateY(-180deg);
+    width: 100%;
+    height: 100%;
 }
 
 .card_face-back .card-content {
