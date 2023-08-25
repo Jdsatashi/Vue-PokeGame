@@ -18,7 +18,7 @@ export default {
             rules: [],
             time: 0,
             timeCounting: null,
-            isProcessing : false
+            isProcessing: false
         };
     },
     methods: {
@@ -54,7 +54,7 @@ export default {
             else if (this.rules.length === 2 && this.rules[0].value !== this.rules[1].value) {
                 console.log("Wrong...");
                 // set isProcessing to prevent player spamming flip cards
-                this.isProcessing  = true;
+                this.isProcessing = true;
                 setTimeout(() => {
                     // flip back card selected first is wrong
                     this.$refs[`card-${this.rules[0].index}`][0].flipBackCard();
@@ -66,8 +66,8 @@ export default {
 
                 }, 900 /* time to acting flip back card (millisecond) */);
                 setTimeout(() => {
-                    this.isProcessing  = false;
-                }, 1000)
+                    this.isProcessing = false;
+                }, 1000);
             } else return false;
         },
         // function send event returnBack to App.vue
@@ -109,7 +109,6 @@ export default {
             <div>
                 <div class="flex">
                     <p style="font-size: 1.5em">Time: {{ formatTime(time) }}</p>
-
                     <button class="btn" style="margin-left: 1.25em" @click="returnMenu">Back</button>
                 </div>
             </div>
@@ -120,7 +119,7 @@ export default {
             <CardGame v-for="(card, index) in cardContext"
                       :key="index"
                       :ref="`card-${index}`"
-                      :img-back-face-url="`images/${card}.png`"
+                      :imgBackFaceUrl="`images/${card}.png`"
                       v-bind:card="{ index, value: card }"
                       :rules="rules"
                       :card-context="cardContext"
@@ -136,6 +135,7 @@ export default {
     cursor: not-allowed;
     pointer-events: none;
 }
+
 .scene {
     width: 100%;
     height: 100vh;

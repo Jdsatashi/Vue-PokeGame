@@ -1,6 +1,5 @@
 <script setup>
 const emits = defineEmits(["onStart"]);
-
 // send number of blocks to App.vue
 const onClickStart = (totalBlocks) => {
     emits("onStart", { totalBlocks });

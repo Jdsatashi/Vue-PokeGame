@@ -16,21 +16,27 @@ export default {
     data() {
         return {
             isFlipped: false,
-            isDisabled: false
+            isDisabled: false,
         };
     },
-
     methods: {
+        // flip front to back card function
         onToggleFlipCard() {
             if (this.isDisabled) return false;
             this.isFlipped = !this.isFlipped;
             if(this.isFlipped) this.$emit("flip", this.card)
         },
+        // flip back to close card function
         flipBackCard(){
             this.isFlipped = false
         },
+        // disable cards which were right
         onDisable(){
             this.isDisabled = true;
+        },
+        // get specific image url
+        imgUrl() {
+            return import.meta.resolve("../assets/" + this.imgBackFaceUrl)
         }
     }
 }
@@ -47,7 +53,6 @@ export default {
         <div class="card-inner"
              :class="{'is-flipped': isFlipped}"
              v-on:click="onToggleFlipCard"
-
         >
             <div class="card-face card_face-font">
                 <div class="card-content" :style="{
@@ -56,7 +61,10 @@ export default {
             </div>
             <div class="card-face card_face-back">
                 <div class="card-content"
-                     :style="{ backgroundImage: `url('../assets/${imgBackFaceUrl}')` }">
+                     :style="{
+                        'background-image': `url('${imgUrl()}')`,
+                      }"
+                     >
                 </div>
             </div>
         </div>
@@ -102,7 +110,7 @@ export default {
 }
 
 .card_face-font .card-content {
-    background: url("../assets/images/icon_back.png") no-repeat center center;
+    background: url("@/assets/images/icon_back.png") no-repeat center center;
     width: 100%;
     height: 100%;
 }
