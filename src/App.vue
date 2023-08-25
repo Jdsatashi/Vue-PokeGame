@@ -11,9 +11,9 @@ const statusMatch = ref("menu");
 const settings = ref({
     totalBlock: 0,
     cardContext: [],
-    startedAt: 0,
 });
 const timer = ref(0);
+const points = ref(0);
 const handleStart = (config) => {
     settings.value.totalBlock = config.totalBlocks;
     // get half of sum of all block by difficulty [1,2,3...7,8]
@@ -26,15 +26,15 @@ const handleStart = (config) => {
     console.log(cards);
     // mixing location of cards
     settings.value.cardContext = shuffled(shuffled(shuffled(shuffled(shuffled(cards)))));
-    settings.value.startedAt = new Date().getTime();
 
     statusMatch.value = "inGame";
 };
 
 // send total playtime to result scene
-const onGetResult = () => {
-    timer.value = new Date().getTime() - settings.value.startedAt;
-    statusMatch.value = "result";
+const onGetResult = (data) => {
+    timer.value = data.time;
+    points.value = data.points;
+    statusMatch.value = 'result';
 };
 </script>
 
@@ -46,13 +46,14 @@ const onGetResult = () => {
     <!--Interact component | statusMatch = 'inGame'   -->
     <InteractScene
         v-if="statusMatch === 'inGame'" :cardContext="settings.cardContext"
-        @onFinish="onGetResult"
+        @gameFinished="onGetResult($event)"
         @returnBack="statusMatch = 'menu'"
     />
     <!--Result component | statusMatch = 'result'   -->
     <ResultScene
         v-if="statusMatch === 'result'"
         :timer="timer"
+        :points="points"
         @playAgain="statusMatch = 'menu'"
     />
 </template>

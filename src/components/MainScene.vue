@@ -51,24 +51,24 @@ const onClickStart = (totalBlocks) => {
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 80%;
-    max-width: 400px;
+    width: 100%;
+    max-width: 500px;
     margin-top: -5em;
 }
 
 .title {
-    font-size: 2.5em;
+    font-size: 3em;
     font-weight: 700;
     background: linear-gradient(45deg, #00A5FF, rgba(152, 223, 245, 0.98) 50%, #00A5FF);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0.25em 0.25em 0.5em rgba(159, 157, 157, 0.9);
+    text-shadow: 0.3em 0.3em 0.6em rgba(159, 157, 157, 0.9);
     transform: perspective(50px) rotateX(10deg);
 }
 
 .subtitle {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-top: 10px;
     text-align: center;
     text-shadow: 2px 2px 4px rgba(157, 155, 155, 0.9);
@@ -103,6 +103,8 @@ const onClickStart = (totalBlocks) => {
 
 .btn {
     margin: 10px;
+    width: 100%;
+    height: 100%;
     padding: 10px 20px;
     background: #00A5FF linear-gradient(45deg, #00A5FF, rgba(152, 223, 245, 0.98) 50%, #00A5FF);
     border: none;

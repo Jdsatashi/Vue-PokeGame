@@ -26,7 +26,7 @@ export default {
         // Check the rule of the game
         checkRule(card) {
             // Check to disable other cards when some cards were selected
-            if (this.isProcessing || this.rules.length === 2) return false;
+            if (this.isProcessing) return false;
 
             this.rules.push(card);
             // condition if 2 cards were selected is right
@@ -45,11 +45,13 @@ export default {
                     const disableElements = document.querySelectorAll(
                         ".scene .card.disable"
                     );
+                    console.log(disableElements)
                     // check disableElements exist and has length + 2 equal to cardContext length
                     // notes: disableElements.length need + 2 because first and second right cards were not added to disableElements
-                    if (disableElements && disableElements.length + 2 === this.cardContext.length) {
+                    if (disableElements && disableElements.length + 2 >= this.cardContext.length) {
+                        console.log(disableElements);
                         setTimeout(() => {
-                            this.$emit("onFinish");
+                            this.$emit('gameFinished', { time: this.time, points: this.points });
                         }, 1000);
                     }
                     this.updatePoints("right")
@@ -137,7 +139,6 @@ export default {
                         break;
                 }
             } else if ( status === "wrong" && this.points > 0) return this.points -=2
-
         },
     },
     mounted() {

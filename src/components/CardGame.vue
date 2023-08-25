@@ -24,11 +24,15 @@ export default {
         onToggleFlipCard() {
             if (this.isDisabled) return false;
             this.isFlipped = true;
-            if(this.isFlipped) this.$emit("flip", this.card)
+            if(this.isFlipped) {
+                this.$emit("flip", this.card)
+                this.onDisable()
+            }
         },
         // flip back to close card function
         flipBackCard(){
             this.isFlipped = false
+            this.isDisabled = false
         },
         // disable cards which were right
         onDisable(){
@@ -80,6 +84,7 @@ export default {
     width: 90px;
     height: 120px;
     border: 1px solid rgba(155, 153, 153, 0.9);
+    background: #363434 linear-gradient(45deg, #1f1a1a, rgba(131, 129, 129, 0.9) 50%, #2d2623);
 }
 
 .card-inner {
@@ -116,7 +121,7 @@ export default {
 }
 
 .card_face-back {
-    background-color: var(--light);
+    background: #f5f5f5 linear-gradient(125deg, #f8f8f8, rgba(164, 164, 164, 0.91) 50%, #fafafa);
     transform: rotateY(-180deg);
     width: 100%;
     height: 100%;
