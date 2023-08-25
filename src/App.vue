@@ -11,7 +11,7 @@ const statusMatch = ref("menu");
 const settings = ref({
     totalBlock: 0,
     cardContext: [],
-    startedAt: 0
+    startedAt: 0,
 });
 const timer = ref(0);
 const handleStart = (config) => {

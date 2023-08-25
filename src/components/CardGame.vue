@@ -23,7 +23,7 @@ export default {
         // flip front to back card function
         onToggleFlipCard() {
             if (this.isDisabled) return false;
-            this.isFlipped = !this.isFlipped;
+            this.isFlipped = true;
             if(this.isFlipped) this.$emit("flip", this.card)
         },
         // flip back to close card function
@@ -62,7 +62,7 @@ export default {
             <div class="card-face card_face-back">
                 <div class="card-content"
                      :style="{
-                        'background-image': `url('${imgUrl()}')`,
+                        'background-image': `url(${imgUrl()})`,
                       }"
                      >
                 </div>

@@ -18,7 +18,8 @@ export default {
             rules: [],
             time: 0,
             timeCounting: null,
-            isProcessing: false
+            isProcessing: false,
+            points: 0,
         };
     },
     methods: {
@@ -29,46 +30,51 @@ export default {
 
             this.rules.push(card);
             // condition if 2 cards were selected is right
-            if (this.rules.length === 2 && this.rules[0].index !== this.rules[1].index && this.rules[0].value === this.rules[1].value) {
-                console.log("true...");
-                // disable 2 right cards
-                this.$refs[`card-${this.rules[0].index}`][0].onDisable();
-                this.$refs[`card-${this.rules[1].index}`][0].onDisable();
-                // reset rules array
-                this.rules = [];
-
-                /* disableElements selects all elements with the class "disable" that
-                 are inside elements with the classes "scene" and "card" */
-                const disableElements = document.querySelectorAll(
-                    ".scene .card.disable"
-                );
-                // check disableElements exist and has length + 2 equal to cardContext length
-                // notes: disableElements.length need + 2 because first and second right cards were not added to disableElements
-                if (disableElements && disableElements.length + 2 === this.cardContext.length) {
-                    setTimeout(() => {
-                        this.$emit("onFinish");
-                    }, 1000);
-                }
-            }
-            // condition if 2 cards were selected is wrong
-            else if (this.rules.length === 2 && this.rules[0].value !== this.rules[1].value) {
-                console.log("Wrong...");
-                // set isProcessing to prevent player spamming flip cards
-                this.isProcessing = true;
-                setTimeout(() => {
-                    // flip back card selected first is wrong
-                    this.$refs[`card-${this.rules[0].index}`][0].flipBackCard();
-                    // flip back card selected second is wrong
-                    this.$refs[`card-${this.rules[1].index}`][0].flipBackCard();
+            if(this.rules.length === 2){
+                if(this.rules[0].index === this.rules[1].index) return this.rules = []
+                if (this.rules[0].value === this.rules[1].value) {
+                    console.log("true...");
+                    // disable 2 right cards
+                    this.$refs[`card-${this.rules[0].index}`][0].onDisable();
+                    this.$refs[`card-${this.rules[1].index}`][0].onDisable();
                     // reset rules array
                     this.rules = [];
-                    // set back to default value allow player selecting cards
 
-                }, 900 /* time to acting flip back card (millisecond) */);
-                setTimeout(() => {
-                    this.isProcessing = false;
-                }, 1000);
-            } else return false;
+                    /* disableElements selects all elements with the class "disable" that
+                     are inside elements with the classes "scene" and "card" */
+                    const disableElements = document.querySelectorAll(
+                        ".scene .card.disable"
+                    );
+                    // check disableElements exist and has length + 2 equal to cardContext length
+                    // notes: disableElements.length need + 2 because first and second right cards were not added to disableElements
+                    if (disableElements && disableElements.length + 2 === this.cardContext.length) {
+                        setTimeout(() => {
+                            this.$emit("onFinish");
+                        }, 1000);
+                    }
+                    this.updatePoints("right")
+                }
+                // condition if 2 cards were selected is wrong
+                else if (this.rules.length === 2 && this.rules[0].value !== this.rules[1].value) {
+                    console.log("Wrong...");
+                    // set isProcessing to prevent player spamming flip cards
+                    this.isProcessing = true;
+                    setTimeout(() => {
+                        // flip back card selected first is wrong
+                        this.$refs[`card-${this.rules[0].index}`][0].flipBackCard();
+                        // flip back card selected second is wrong
+                        this.$refs[`card-${this.rules[1].index}`][0].flipBackCard();
+                        // reset rules array
+                        this.rules = [];
+                        // set back to default value allow player selecting cards
+
+                    }, 900 /* time to acting flip back card (millisecond) */);
+                    setTimeout(() => {
+                        this.isProcessing = false;
+                    }, 1000);
+                    this.updatePoints("wrong")
+                } else return false;
+            }
         },
         // function send event returnBack to App.vue
         returnMenu() {
@@ -80,6 +86,15 @@ export default {
             const seconds = time % 60;
             return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
         },
+        isTimeLessThanOrEqualTo(timeToCompare, referenceTime) {
+            const [compareMinutes, compareSeconds] = timeToCompare.split(":").map(Number);
+            const compareTotalSeconds = compareMinutes * 60 + compareSeconds;
+
+            const [referenceMinutes, referenceSeconds] = referenceTime.split(":").map(Number);
+            const referenceTotalSeconds = referenceMinutes * 60 + referenceSeconds;
+
+            return compareTotalSeconds <= referenceTotalSeconds;
+        },
         // start counting time
         startTimer() {
             this.timeCounting = setInterval(() => {
@@ -89,7 +104,28 @@ export default {
         // clear timer when unmounted
         stopTimer() {
             clearInterval(this.timeCounting);
-        }
+        },
+        updatePoints(status) {
+            if(status === "right"){
+                const currentTime = this.formatTime(this.time);
+                if (this.isTimeLessThanOrEqualTo(currentTime, "00:30")) {
+                    this.points += 50;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "01:00")) {
+                    this.points += 40;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "02:00")) {
+                    this.points += 30;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "03:00")) {
+                    this.points += 25;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "04:00")) {
+                    this.points += 20;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "05:00")) {
+                    this.points += 15;
+                } else if (this.isTimeLessThanOrEqualTo(currentTime, "08:00")) {
+                    this.points += 10;
+                } else return this.points += 5
+            } else if ( status === "wrong" && this.points > 0) return this.points -=2
+
+        },
     },
     mounted() {
         this.startTimer();
@@ -109,6 +145,7 @@ export default {
             <div>
                 <div class="flex">
                     <p style="font-size: 1.5em">Time: {{ formatTime(time) }}</p>
+                    <p style="font-size: 1.5em; margin-left: 1.25em">Points: {{ points }}</p>
                     <button class="btn" style="margin-left: 1.25em" @click="returnMenu">Back</button>
                 </div>
             </div>
