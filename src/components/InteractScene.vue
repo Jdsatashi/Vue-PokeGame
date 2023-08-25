@@ -105,24 +105,37 @@ export default {
         stopTimer() {
             clearInterval(this.timeCounting);
         },
+        // update point depend on time flip right cards
         updatePoints(status) {
             if(status === "right"){
                 const currentTime = this.formatTime(this.time);
-                if (this.isTimeLessThanOrEqualTo(currentTime, "00:30")) {
-                    this.points += 50;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "01:00")) {
-                    this.points += 40;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "02:00")) {
-                    this.points += 30;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "03:00")) {
-                    this.points += 25;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "04:00")) {
-                    this.points += 20;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "05:00")) {
-                    this.points += 15;
-                } else if (this.isTimeLessThanOrEqualTo(currentTime, "08:00")) {
-                    this.points += 10;
-                } else return this.points += 5
+                let fnc = this.isTimeLessThanOrEqualTo
+                switch (true) {
+                    case fnc(currentTime, "00:30"):
+                        this.points += 50;
+                        break;
+                    case fnc(currentTime, "01:00"):
+                        this.points += 40;
+                        break;
+                    case fnc(currentTime, "02:00"):
+                        this.points += 30;
+                        break;
+                    case fnc(currentTime, "03:00"):
+                        this.points += 25;
+                        break;
+                    case fnc(currentTime, "04:00"):
+                        this.points += 20;
+                        break;
+                    case fnc(currentTime, "05:00"):
+                        this.points += 15;
+                        break;
+                    case fnc(currentTime, "08:00"):
+                        this.points += 10;
+                        break;
+                    default:
+                        this.points += 5;
+                        break;
+                }
             } else if ( status === "wrong" && this.points > 0) return this.points -=2
 
         },

@@ -35,12 +35,8 @@ export default {
             this.isDisabled = true;
         },
         // get specific image url
-        async importImgUrl() {
-            return await import(`@/assets/images/${this.imgBackFaceUrl}.png`)
-        },
         imgUrl() {
-            this.importImgUrl()
-            // return '@/assets/images/' + this.imgBackFaceUrl + '.png'
+            // dynamic url setup > https://vitejs.dev/guide/assets.html#new-url-url-import-meta-url
             return new URL(`../assets/images/${this.imgBackFaceUrl}.png`, import.meta.url).href
         }
     }
