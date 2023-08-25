@@ -37,7 +37,8 @@ export default {
         // get specific image url
         async importImgUrl() {
             const imgModule = await import(`@/assets/images/${this.imgBackFaceUrl}.png`);
-            console.log(imgModule)
+            console.log("This function is work")
+            return imgModule
         },
         imgUrl() {
             this.importImgUrl()
