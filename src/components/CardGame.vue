@@ -35,8 +35,13 @@ export default {
             this.isDisabled = true;
         },
         // get specific image url
+        async importImgUrl() {
+            const imgModule = await import(`@/assets/images/${this.imgBackFaceUrl}.png`);
+            console.log(imgModule)
+        },
         imgUrl() {
-            return import.meta.resolve("../assets/" + this.imgBackFaceUrl)
+            this.importImgUrl()
+            return import.meta.resolve('../assets/images/' + this.imgBackFaceUrl + '.png');
         }
     }
 }
@@ -59,7 +64,7 @@ export default {
                     backgroundSize: `${(((920 - 16 * 4) / Math.sqrt(cardContext.length) - 16) * 3) / 4 / 3}px`
                 }"></div>
             </div>
-            <div class="card-face card_face-back">
+            <div class="card-face card_face-back" :style="{borderRadius: `${16 * (16 / cardContext.length)}px`}">
                 <div class="card-content"
                      :style="{
                         'background-image': `url(${imgUrl()})`,
@@ -104,7 +109,6 @@ export default {
     height: 100%;
     backface-visibility: hidden;
     overflow: hidden;
-    border-radius: 1rem;
     padding: 1rem;
     box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
 }

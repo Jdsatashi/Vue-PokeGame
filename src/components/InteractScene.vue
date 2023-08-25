@@ -156,7 +156,7 @@ export default {
             <CardGame v-for="(card, index) in cardContext"
                       :key="index"
                       :ref="`card-${index}`"
-                      :imgBackFaceUrl="`images/${card}.png`"
+                      :imgBackFaceUrl="`${card}`"
                       v-bind:card="{ index, value: card }"
                       :rules="rules"
                       :card-context="cardContext"
@@ -175,7 +175,7 @@ export default {
 
 .scene {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
