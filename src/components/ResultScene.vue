@@ -10,6 +10,7 @@ export default {
         return {};
     },
     methods: {
+        // function to return menu scene
         playAgain() {
             this.$emit("playAgain");
         }

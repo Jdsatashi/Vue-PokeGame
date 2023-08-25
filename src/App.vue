@@ -5,6 +5,7 @@
     import { ref } from "vue";
     import { shuffled } from "@/utils/array";
 
+    // specific status match for specific scene
     const statusMatch = ref("menu");
     const settings = ref({
         totalBlock: 0,

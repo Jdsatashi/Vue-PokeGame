@@ -56,7 +56,7 @@ export default {
             </div>
             <div class="card-face card_face-back">
                 <div class="card-content"
-                     :style="{ backgroundImage: `url('/src/assets/${imgBackFaceUrl}')`}">
+                     :style="{ backgroundImage: `url('../assets/${imgBackFaceUrl}')` }">
                 </div>
             </div>
         </div>
