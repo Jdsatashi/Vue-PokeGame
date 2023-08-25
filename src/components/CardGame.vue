@@ -36,13 +36,12 @@ export default {
         },
         // get specific image url
         async importImgUrl() {
-            const imgModule = await import(`@/assets/images/${this.imgBackFaceUrl}.png`);
-            console.log("This function is work")
-            return imgModule
+            return await import(`@/assets/images/${this.imgBackFaceUrl}.png`)
         },
         imgUrl() {
             this.importImgUrl()
-            return import.meta.resolve('../assets/images/' + this.imgBackFaceUrl + '.png');
+            // return '@/assets/images/' + this.imgBackFaceUrl + '.png'
+            return new URL(`../assets/images/${this.imgBackFaceUrl}.png`, import.meta.url).href
         }
     }
 }
