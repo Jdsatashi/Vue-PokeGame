@@ -140,7 +140,7 @@ export default {
     <div class="scene">
         <div class="flex">
             <div>
-                <h1>Flip 2 same card to play</h1>
+                <h1>Flip 2 same card to play. (test 2)</h1>
             </div>
             <div>
                 <div class="flex">
